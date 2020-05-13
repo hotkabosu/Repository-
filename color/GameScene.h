@@ -15,4 +15,7 @@ private:
 	virtual int Init(void);
 	bool GameDraw(void);
 
+	float boxPos;
+	float boxposy;
+	float x;
 };

@@ -15,6 +15,7 @@ const KEY_ARRAY & GameCtl::GetCtl(KEY_TYPE type) const
 	{
 		return dataOld;	
 	}
+
 	return data;
 }
 

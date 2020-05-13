@@ -20,20 +20,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
-    <ClCompile Include="SelectScene.cpp" />
-    <ClCompile Include="GameCtl.cpp" />
+    <ClCompile Include="classObj.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="ImageMng.cpp" />
+    <ClCompile Include="GameCtl.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Obj.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneMng.cpp" />
+    <ClCompile Include="SelectScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="VECTOR2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
-    <ClInclude Include="SelectScene.h" />
-    <ClInclude Include="GameCtl.h" />
+    <ClInclude Include="classObj.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="ImageMng.h" />
+    <ClInclude Include="GameCtl.h" />
+    <ClInclude Include="Obj.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="SceneMng.h" />
+    <ClInclude Include="SelectScene.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="VECTOR2.h" />
   </ItemGroup>
