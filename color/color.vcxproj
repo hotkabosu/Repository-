@@ -28,6 +28,7 @@
     <ClCompile Include="Obj.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneMng.cpp" />
+    <ClCompile Include="Scroll.cpp" />
     <ClCompile Include="SelectScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="VECTOR2.cpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Obj.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneMng.h" />
+    <ClInclude Include="Scroll.h" />
     <ClInclude Include="SelectScene.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="VECTOR2.h" />
