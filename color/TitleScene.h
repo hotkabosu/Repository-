@@ -23,7 +23,10 @@ private:
 	int startButton;
 	int backImage;
 	int bright;
-	int scButton;
+	int scButton1;
+	int scButton2;
 
+	//float _time;
+	//bool changeFlag;
 };
 

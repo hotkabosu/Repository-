@@ -3,6 +3,7 @@
 #include "GameCtl.h"
 #include "TitleScene.h"
 #include"SelectScene.h"
+#include "GameScene.h"
 
 SceneMng::SceneMng()	// ºİ½Ä×¸À
 {
@@ -16,7 +17,7 @@ SceneMng::~SceneMng()	// ÃŞ½Ä×¸À
 void SceneMng::Run(void) 
 {
 								// ˆê”ÔÅ‰‚ÉŒÄ‚Î‚ê‚é‰æ–Ê
-	activeScene = std::make_unique<TitleScene>();	// ‰Šú‰»
+	activeScene = std::make_unique<GameScene>();	// ‰Šú‰»
 
 	// ---------- ¹Ş°ÑÙ°Ìß 
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)	// —¼•ûDxLib‚Ì–½—ß
