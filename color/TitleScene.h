@@ -24,8 +24,10 @@ private:
 	int backImage;
 	int bright;
 	int scButton1;
-	int scButton2;
-
+	int flamCnt;
+	bool selectFlag;
+	SCENE_TYPE _nowScene;
+	SCENE_TYPE _oldScene;
 	//float _time;
 	//bool changeFlag;
 };

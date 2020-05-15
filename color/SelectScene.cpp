@@ -5,6 +5,7 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 
+
 SelectScene::SelectScene()
 {
 	Init();
@@ -47,7 +48,7 @@ bool SelectScene::FadeInScreen(int fadeStep)
 bool SelectScene::SelectDraw(void)
 {
 	ClsDrawScreen();
-	backImage = LoadGraphScreen(0, 0, "image/select/sBack0.png", true);
+	//backImage = LoadGraphScreen(0, 0, "image/select/sBack0.png", true);
 
 	DrawBox(31, 31, 60, 60, GetColor(255, 0, 255), TRUE);
 	DrawFormatString(150, 150, GetColor(255, 0, 255),"SelectStageÅ@PushEnter");

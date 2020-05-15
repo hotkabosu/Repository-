@@ -19,6 +19,8 @@ void SceneMng::Run(void)
 								// ˆê”ÔÅ‰‚ÉŒÄ‚Î‚ê‚é‰æ–Ê
 	activeScene = std::make_unique<GameScene>();	// ‰Šú‰»
 
+	//ImageMng::GetInstance().GetID("·¬×", "image/char.png", { 30, 32 }, { 10,10 });	// ƒLƒƒƒ‰‰æ‘œ
+
 	// ---------- ¹Ş°ÑÙ°Ìß 
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)	// —¼•ûDxLib‚Ì–½—ß
 	{

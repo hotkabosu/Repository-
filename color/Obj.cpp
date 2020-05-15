@@ -18,7 +18,7 @@ Obj::Obj()
 // ²Ý½ÀÝ½‚Å‚­‚é@‚±‚±‚ðŒÄ‚Î‚È‚¢‚Æ•`‰æ‚Å‚«‚È‚¢
 bool Obj::init(std::string fileName, VECTOR2 divSize, VECTOR2 divCnt)
 {
-	lpImageMng.GetID(fileName, divSize, divCnt);	// À²ÐÝ¸Þ‚ðºÝÄÛ°Ù‚µ‚ÄŒÄ‚Ño‚µ‚½‚¢
+//	lpImageMng.GetID(fileName, divSize, divCnt);	// À²ÐÝ¸Þ‚ðºÝÄÛ°Ù‚µ‚ÄŒÄ‚Ño‚µ‚½‚¢
 	// ‘ã“ü		F‚ª‹t‚É‚È‚é‚Æ‹t‚É‘ã“ü‚µ‚Ä‚¢‚é@”Z‚¢@”–‚¢
 	imageName = fileName;
 	this->divSize = divSize;

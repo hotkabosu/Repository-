@@ -4,6 +4,7 @@
 #include "SceneMng.h"
 #include "GameCtl.h"
 #include "TitleScene.h"
+#include "Player.h"
 
 GameScene::GameScene()
 {
@@ -27,68 +28,102 @@ unique_Base GameScene::Updata(unique_Base own, const GameCtl& ctl)
 	if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_D])
 	{
 		_pPosX += 5;
+		dir = DIR_RIGHT;
 	}
+	// 左に移動
 	if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_A])
 	{
-		_pPosX -= 5;
+		if (0 <= _pPosX)
+		{
+			_pPosX -= 5;
+		}
+		else
+		{
+			_pPosX += 1;
+
+		}
+		dir = DIR_LEFT;
 	}
+	// 攻撃
 	if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_K])
 	{
 		_atackFlag = true;
 	}
 
+
+	//if (_atackFlag == true
+	//	&& _pPosX + _pAtackRange + 75 >= _ePosX)// 右側攻撃の範囲に入ってた時
+	//	//&& _ePosX + 75 >= _pPosX)
+	//{
+	//	// 敵を消す
+	//	_eDeathFlag = true;
+	//}
+
+
+	// Scroll
+	//if (dir == DIR_RIGHT && SCREEN_SIZE_X <= _pPosX)
+	//{
+	// プレイヤーが画面の真ん中より右側に行ったらカメラを左にスクロールする
+	//}
+
 	HitCheck();
 	GameDraw();
 
 
-
+	flamCnt++;
+	nowTime++;
 	return std::move(own);
 }
 
 void GameScene::HitCheck(void)
 {
-	if (_atackFlag == true)
+	if (_eMoveFlag == true)
 	{
-		if ((_pAtackRange + 75 <= _ePosX))
+		// 動くかどうか
+		if (_pPosX + 125 <= _ePosX - 25)
 		{
+			// プレイヤーより右側にいたら左（プレイヤー側）に移動
+			_ePosX -= 2;
+			_eMoveFlag = true;
+
+		}
+		else if (_ePosX + 55 <= _pPosX)
+		{
+			// プレイヤーより左側にいたら右（プレイヤー側）に移動
+			_ePosX += 2;
+			_eMoveFlag = true;
+
+		}
+		else
+		{
+			// 接触したとき
 			_eMoveFlag = false;
+			//if ((_ePosX + 100 <= _pPosX) || (_pPosX + 150 <= _ePosX))
+			//{
+			//	
+			//}
 		}
 	}
 
-	// 動くかどうか
-	if (_pPosX + 150 <= _ePosX - 25)
-	{			// プレイヤーより右側にいたら左（プレイヤー側）に移動
-		_ePosX -= 2;
-		_eMoveFlag = true;
-
-	}
-	else if (_ePosX + 100 + 25 <= _pPosX)
+	if (_atackFlag == true)// プレイヤーが攻撃したとき
 	{
-		// プレイヤーより左側にいたら右（プレイヤー側）に移動
-		_ePosX += 2;
-		_eMoveFlag = true;
-
+		if ((_pPosX + _pAtackRange + 75 >= _ePosX))
+		{
+			_ePosX += 25;
+			oldTime = nowTime;
+			eHP-=1;
+		}
 	}
-	else
+	if (oldTime + 50.0 <= nowTime)
 	{
-		_eMoveFlag = false;
-		//if ((_ePosX + 100 <= _pPosX) || (_pPosX + 150 <= _ePosX))
-		//{
-		//	eflag = true;
-
-		//}
+		// 今の時間が攻撃を受けた時の時間+50.0を超えたら動いてもよい
+		_ePosX;
 	}
-
-
-	//if (_ePosX <= _pPosX + 30  )
+	//if (eHP == 0)
 	//{
-	//	eflag = false;
-
+	//	//　
+	//	_eDeathFlag = true;
 	//}
-	//else
-	//{
-	//}
-
 
 }
 
@@ -98,28 +133,50 @@ bool GameScene::GameDraw(void)
 	ClsDrawScreen();
 	stageBack = LoadGraphScreen(0, 0, "stage/testStage.png", true);
 	//DrawBox(_pPosX, 550, _pPosX+150, 550-150, GetColor(0, 255, 0), TRUE);// プレイヤー
+
+
+	DrawFormatString(SCREEN_SIZE_X-100, 600, GetColor(255, 255, 0), "GameScene");
 	DrawBox(_pPosX, _pPosY, _pPosX + 150, _pPosY - 150, GetColor(255, 0, 255), false);// プレイヤー
-
-
-	DrawFormatString(150, 150, GetColor(255, 255, 0), "GameScene");
 
 	if (_atackFlag == true)
 	{
-		DrawBox(_pPosX+_pAtackRange, 550 - 75, _pPosX+_pAtackRange +75, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
+		// 攻撃
+		DrawBox(_pPosX + 75, 550 - 75, _pPosX + _pAtackRange + 75, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
+		_player = LoadGraphScreen(_pPosX, _pPosY - 150, "image/player/pTest2.png", true);// 仮画像
 		_atackFlag = false;
 	}
-
-
-	//
-	if (_eDeathFlag == false)
-	{// 死んでないから描画
-		//DrawBox(_ePosX, 550, _ePosX + 30, 550 - 150, GetColor(0, 255, 255), true);//右端画面外
-		_enemy = LoadGraphScreen(_ePosX, 400, "image/enemy/testE.png", true);// 仮画像
-	}
-	if (_eMoveFlag == false)
+	else
 	{
-		// 攻撃
-		DrawBox(_ePosX, 550 - 75, _ePosX-25, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
+		// 移動
+		_player = LoadGraphScreen(_pPosX, _pPosY - 150, "image/player/pTest.png", true);// 仮画像
+
+	}
+
+
+	//　敵が生きてるとき
+	if (_eDeathFlag == false)
+	{
+		
+		if (_eMoveFlag == true)
+		{
+			// 死んでないから描画
+		//DrawBox(_ePosX, 550, _ePosX + 30, 550 - 150, GetColor(0, 255, 255), true);//右端画面外
+			DrawBox(_ePosX, 550, _ePosX + 100, 400, GetColor(255, 0, 0), false);// 
+			_enemy = LoadGraphScreen(_ePosX, 400, "image/enemy/test2.png", true);// 仮画像
+
+		}
+		// 動いてないとき＝キャラに接近し終わった 
+		else if (_eMoveFlag == false)
+		{
+			//if ((flamCnt / 10) % 2 == 0)
+			//{
+				// 攻撃
+				_enemy = LoadGraphScreen(_ePosX-25, 400, "image/enemy/test3.png", true);// 仮画像
+
+				DrawBox(_ePosX, 550 - 75, _ePosX - 25, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
+				_damage += 15;
+			//}
+		}
 	}
 
 	StatusDraw();
@@ -127,12 +184,17 @@ bool GameScene::GameDraw(void)
 	return false;
 }
 
+
 void GameScene::StatusDraw(void)
 {
 	// この線より下にＨＰやゲージ
 	DrawLine(0, 700 - 150, 1200, 700 - 150, GetColor(255, 255, 0), TRUE);	
 	// この線より左、HPのとこ
 	DrawLine(200, 550, 200, 700, GetColor(0, 255, 0), false);
+	hpBox=DrawBox(0, 550 , 200, 700, GetColor(255, 255, 255), true);
+	//hpBox = SetDrawBright(255 - _damage, 255 - _damage, 255 - _damage);
+
+
 	// この線より右、タイムとかスコアが入るとこ
 	DrawLine(SCREEN_SIZE_X-200, 550, SCREEN_SIZE_X-200, 700, GetColor(0, 255, 0), false);
 	// この線の左右に色バー
@@ -154,12 +216,17 @@ int GameScene::Init(void)
 	// プレイヤー
 	_pPosY = 550;
 	_pPosX = 0;
-	_pAtackRange = 150;
-	_ePosX = SCREEN_SIZE_X-30;
+	_pAtackRange = 125;
+	_damage = 0;
 
 	// エネミー
+	_ePosX = SCREEN_SIZE_X;
 	_eMoveFlag = true;
 	_atackFlag = false;
 	_eDeathFlag = false;
+	eHP = 2;
+
+	nowTime = 0.0f;
+	oldTime = nowTime;
 	return 0;
 }

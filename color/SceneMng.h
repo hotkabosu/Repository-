@@ -5,6 +5,16 @@
 #include "VECTOR2.h"
 #include "BaseScene.h"
 
+
+enum SCENE_TYPE
+{
+	SCENE_TYPE_TITLE,
+	SCENE_TYPE_SELECT,
+	SCENE_TYPE_GAME,
+	SCENE_TYPE_RESULT,
+	SCENE_TYPE_MAX,
+};
+
 class Obj;
 class GameCtl;
 

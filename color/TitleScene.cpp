@@ -28,6 +28,7 @@ unique_Base TitleScene::Updata(unique_Base own, const GameCtl& ctl)
 		//	}
 		//if (changeFlag == true)
 		//{
+		_oldScene = SCENE_TYPE_TITLE;
 			return std::make_unique<SelectScene>();
 			//changeFlag = false;
 		//}
@@ -42,7 +43,18 @@ unique_Base TitleScene::Updata(unique_Base own, const GameCtl& ctl)
 
 	//}
 
-	//_time++;
+
+	//if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_S])
+	//{
+	//	if ((flamCnt / 20) % 2 == 0)
+	//	{
+	//		scButton1;
+	//	}
+	//}
+
+
+		flamCnt++;
+
 	TitleDraw();
 	return std::move(own);
 }
@@ -71,8 +83,11 @@ bool TitleScene::TitleDraw(void)
 
 	DrawFormatString(150, 150, GetColor(255, 0, 255), "TitleScene");
 	backImage = LoadGraphScreen(0, 0, "image/title/tBack0.png", true);
-	startButton= LoadGraphScreen(SCREEN_SIZE_X/3, SCREEN_SIZE_Y / 2, "image/title/tsButton1.png", true);
-	
+	// 点滅
+	if ((flamCnt / 20) % 2 == 0)
+	{
+		startButton = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2, "image/title/tsButton1.png", true);
+	}
 
 	//DrawBox(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2, SCREEN_SIZE_X / 3+400, SCREEN_SIZE_Y / 2+100, GetColor(255, 0, 255), false);
 
@@ -82,7 +97,7 @@ bool TitleScene::TitleDraw(void)
 	//
 	
 	// ストーリーチェックボタン
-	//scButton = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2+100, "image/title/scButton1.png", true);// この位置にストーリーを見るボタン
+	scButton1 = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2+100, "image/title/scButton1.png", true);// この位置にストーリーを見るボタン
 	
 	//DrawFormatString(50, 50, 0xff0000, "%d", _time);
 
@@ -98,6 +113,9 @@ int TitleScene::Init(void)
 
 	bright = 255;
 	fadeCnt = 0;
+	flamCnt = 0;
+	_nowScene = SCENE_TYPE_TITLE;
+	selectFlag = true;
 	//_time = 0;
 	//changeFlag = false;
 	return 0;
