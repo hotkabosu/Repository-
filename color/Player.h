@@ -4,6 +4,8 @@
 //#include "VECTOR2.h"
 //#include "Obj.h"
 //
+//using DIR_TBL_ARRAY = std::array<int, DIR_MAX>;
+//#define lpPlayer Player::GetInstance()
 //
 //class Player:
 //	public Obj
@@ -16,14 +18,16 @@
 //	~Player();
 //
 //	bool PlayerDraw(void);
-//
 //private:
+//	bool initAnim(void);
+//	bool CheckObjType(OBJ_TYPE type);
+//
 //	void SetMove(const GameCtl& ctl, weakListObj objList);
+//	DIR_TBL_ARRAY		 keyIdTbl;
 //
 //	int _player;
 //	bool _atackFlag;
-//	float _pPosX;
-//	float _pPosY;
+//	VECTOR2 _pos;
 //	float _pAtackRange;
 //
 //	DIR dir;
