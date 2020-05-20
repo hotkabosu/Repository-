@@ -33,7 +33,9 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 		{
 			// W=è„ÇÃÉ}ÉbÉv
 			selectPos.y -= 270;
-		//	Stage(stage1, STAGE::FIRST);
+			decided=lpStageCtl.FirstStage(STAGE::FIRST);
+			selectStage = STAGE::FIRST;
+			//	Stage(stage1, STAGE::FIRST);
 		}
 		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_S] == 1
 			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_S] == 0)
@@ -44,13 +46,22 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 			//}
 			//else
 			//{
-			selectPos.y += 270;
+			if (selectPos.y <= 301)
+			{
+				selectPos.y += 270;
+			}
 		//	Stage(stage2, STAGE::SECOND);
-
+			decided=lpStageCtl.SecondStage(STAGE::SECOND);
+			selectStage = STAGE::SECOND;
 			//}
 		}
+		else
+		{
+			decided = lpStageCtl.FirstStage(STAGE::FIRST);
+			selectStage = STAGE::FIRST;
+		}
 	}
-
+	
 	if (selectFlag == true)
 	{
 		changeTime++;
@@ -59,6 +70,7 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 		if (50 <= changeTime)
 		{
 			selectFlag = false;
+			lpStageCtl.GetStage(selectStage);
 			return std::make_unique<GameScene>();
 		}
 
@@ -68,7 +80,7 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 
 	SelectDraw();
 	flamCnt++;
-
+	
 	return std::move(own);
 }
 
@@ -88,7 +100,12 @@ bool SelectScene::FadeInScreen(int fadeStep)
 	}
 }
 
-//STAGE SelectScene::StageLoad(STAGE getStage, VECTOR2 pos, std::string f_name, bool flag)
+//bool SelectScene::StageLoad1(void)
+//{
+//	return false;
+//}
+
+//STAGE SelectScene::StageLoad()
 //{
 //	stage1 = LoadGraph("image/select/testStage.png");
 //
@@ -130,6 +147,7 @@ bool SelectScene::SelectDraw(void)
 	}
 	stage1 = LoadGraphScreen(100, 50, "image/select/testStage.png", true);
 	stage2 = LoadGraphScreen(100, 320, "image/select/testStage2.png", true);
+	DrawFormatString(SCREEN_SIZE_X / 2, SCREEN_SIZE_Y / 2, GetColor(255, 255, 255), "[%d\n]", selectPos.y);
 
 	ScreenFlip();
 
@@ -144,5 +162,6 @@ int SelectScene::Init(void)
 	nowPos.y = selectPos.y;
 	changeTime = 0;
 	selectFlag = false;
+	//decided = lpStageCtl.FirstStage(STAGE::FIRST);
 	return 0;
 }
