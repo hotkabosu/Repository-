@@ -82,7 +82,7 @@ bool TitleScene::TitleDraw(void)
 	ClsDrawScreen();
 
 	DrawFormatString(150, 150, GetColor(255, 0, 255), "TitleScene");
-	backImage = LoadGraphScreen(0, 0, "image/title/tBack0.png", true);
+	backImage = LoadGraphScreen(0, 0, "image/title/Back.png", true);
 	// “_–Å
 	if ((flamCnt / 20) % 2 == 0)
 	{

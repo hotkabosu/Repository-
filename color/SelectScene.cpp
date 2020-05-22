@@ -32,7 +32,10 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_W] == 0)
 		{
 			// W=上のマップ
-			selectPos.y -= 270;
+			if (31 <= selectPos.y)
+			{
+				selectPos.y -= 270;
+			}
 			decided=lpStageCtl.FirstStage(STAGE::FIRST);
 			selectStage = STAGE::FIRST;
 			//	Stage(stage1, STAGE::FIRST);
@@ -55,11 +58,11 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 			selectStage = STAGE::SECOND;
 			//}
 		}
-		else
-		{
-			decided = lpStageCtl.FirstStage(STAGE::FIRST);
-			selectStage = STAGE::FIRST;
-		}
+		//else
+		//{
+		//	decided = lpStageCtl.FirstStage(STAGE::FIRST);
+		//	selectStage = STAGE::FIRST;
+		//}
 	}
 	
 	if (selectFlag == true)
@@ -67,10 +70,16 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 		changeTime++;
 		// エンターを押したらchangeTime加算
 		//　changeTimeが50になるまで点滅を早く　50を超えたらゲームシーンに移動
+		if (selectStage == STAGE::FIRST)
+		{
+
+		}
+		
+		
 		if (50 <= changeTime)
 		{
 			selectFlag = false;
-			lpStageCtl.GetStage(selectStage);
+			lpStageCtl.getStage();
 			return std::make_unique<GameScene>();
 		}
 
@@ -83,6 +92,8 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 	
 	return std::move(own);
 }
+
+
 
 bool SelectScene::FadeInScreen(int fadeStep)
 {
@@ -148,6 +159,13 @@ bool SelectScene::SelectDraw(void)
 	stage1 = LoadGraphScreen(100, 50, "image/select/testStage.png", true);
 	stage2 = LoadGraphScreen(100, 320, "image/select/testStage2.png", true);
 	DrawFormatString(SCREEN_SIZE_X / 2, SCREEN_SIZE_Y / 2, GetColor(255, 255, 255), "[%d\n]", selectPos.y);
+
+	if (selectStage == STAGE::FIRST)
+	{
+		DrawFormatString(450, 450, GetColor(255, 0, 255), "PLAY　STAGE１　？");
+
+	}
+
 
 	ScreenFlip();
 

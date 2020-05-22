@@ -4,7 +4,7 @@
 #include "GameScene.h"
 #include "SelectScene.h"
 #include "ResultScene.h"
-
+#include "Camera.h"
 GameScene::GameScene()
 {
 	Init();
@@ -32,23 +32,6 @@ unique_Base GameScene::Updata(unique_Base own, const GameCtl& ctl)
 		{
 			ChangeColor();
 			testNum += 1;
-			// 現在染まっている色のバーに移動　上から赤青緑
-			//if (2 <= testNum)
-			//{
-			//	// 2（緑）になったら0（赤）に戻す
-			//}
-			//
-			//testNum += 1;
-			//trianglePosY += 50;
-			////if (testNum==0)
-			////{
-			//
-			////}
-			//if (680 <= trianglePosY)
-			//{
-			//	trianglePosY = 570;
-			//	testNum = 0;
-			//}
 		}
 		
 		// Dを押したら右移動
@@ -78,6 +61,16 @@ unique_Base GameScene::Updata(unique_Base own, const GameCtl& ctl)
 
 			}
 			dir = DIR_LEFT;
+		}
+		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_W] == 1
+			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_W] == 0)
+		{
+			for (int jumpPos=0; 10 >= jumpPos; jumpPos++)
+			{
+				playerPos.y -= jumpPos;
+			}
+
+
 		}
 		// 攻撃
 		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_K])
@@ -133,6 +126,9 @@ unique_Base GameScene::Updata(unique_Base own, const GameCtl& ctl)
 	//}
 	//playerColor;
 	//color[testNum];
+	lpCamera.CameraControl(playerPos, centerPos);
+
+
 	GameDraw();
 	flamCnt++;
 	return std::move(own);
@@ -143,17 +139,17 @@ void GameScene::HitCheck(void)
 	//if (_eMoveFlag == true)
 	//{
 		// 動くかどうか
-		if (playerPos.x + 125 <= _ePosX - 25)
+		if (playerPos.x + 125 <= enemyPos.x - 25)
 		{
 			// プレイヤーより右側にいたら左（プレイヤー側）に移動
-			_ePosX -= 2;
+			enemyPos.x -= 2;
 			_eMoveFlag = true;
 
 		}
-		else if (_ePosX+55  <= playerPos.x)
+		else if (enemyPos.x +55  <= playerPos.x)
 		{
 			// プレイヤーより左側にいたら右（プレイヤー側）に移動
-			_ePosX += 2;
+			enemyPos.x += 2;
 			_eMoveFlag = true;
 		}
 		else
@@ -163,22 +159,25 @@ void GameScene::HitCheck(void)
 			
 		//	hitFrend = true;
 		//	frendPos -= 25;
-			playerPos.x -= 25;
-			if (enemyColor == COLOR_TYPE::GREEN)
+			if (_eMoveFlag == false )
 			{
-				if (playerColor == COLOR_TYPE::RED)
+				playerPos.x -= 25;
+				if (enemyColor == COLOR_TYPE::GREEN)
 				{
-					_damage = 4;
-				}
-				else if (playerColor == COLOR_TYPE::BLUE)
-				{
-					_damage = 12;
-				}
-				else if (playerColor == COLOR_TYPE::GREEN)
-				{
-					_damage = 8;
-				}
+					if (playerColor == COLOR_TYPE::RED)
+					{
+						_damage = 4;
+					}
+					else if (playerColor == COLOR_TYPE::BLUE)
+					{
+						_damage = 12;
+					}
+					else if (playerColor == COLOR_TYPE::GREEN)
+					{
+						_damage = 8;
+					}
 
+				}
 			}
 			playerLife-=_damage;
 		}
@@ -186,23 +185,26 @@ void GameScene::HitCheck(void)
 
 	if (_atackFlag == true)// プレイヤーが攻撃したとき=エネミーがダメージを受ける場合
 	{
-		if ((playerPos.x + _pAtackRange + 75 >= _ePosX))
+		if ((playerPos.x + _pAtackRange + 75 >= enemyPos.x))
 		{
 			// 少し離れる
-			_ePosX += 50;
+			enemyPos.x += 50;
 			if (enemyColor == COLOR_TYPE::GREEN)
 			{
 				if (playerColor == COLOR_TYPE::RED)
 				{
 					enemyLife -= 3;
+					score += 30;
 				}
 				else if(playerColor == COLOR_TYPE::BLUE)
 				{
 					enemyLife -= 1;
+					score += 10;
 				}
 				else if (playerColor == COLOR_TYPE::GREEN)
 				{
 					enemyLife -= 2;
+					score += 20;
 				}
 
 			}
@@ -223,6 +225,8 @@ bool GameScene::GameDraw(void)
 {
 	ClsDrawScreen();
 	//DrawGraph(mapPos.x, -mapPos.y, bgImage, false);//0,0始まり　ｘを-〇〇ずらしていく
+	lpStageCtl.setStage(playStage);
+
 	if (playStage == STAGE::FIRST)
 	{
 		LoadGraphScreen(0, 0, "stage/testStage.png", false);
@@ -289,21 +293,21 @@ bool GameScene::GameDraw(void)
 	if (_eDeathFlag == false)
 	{
 		
-		DrawBox(_ePosX, 550, _ePosX + 100, 400, GetColor(255, 0, 0), false);// 
+		DrawBox(enemyPos.x, 550, enemyPos.x + 100, 400, GetColor(255, 0, 0), false);// 
 		if (_eMoveFlag == true)
 		{
 			// 死んでないから描画
 		//DrawBox(_ePosX, 550, _ePosX + 30, 550 - 150, GetColor(0, 255, 255), true);//右端画面外
-			_enemy = LoadGraphScreen(_ePosX, 400, "image/enemy/test2.png", true);// 仮画像
+			_enemy = LoadGraphScreen(enemyPos.x, 400, "image/enemy/test2.png", true);// 仮画像
 
 		}
 		// 動いてないとき＝キャラに接近し終わった 
 		else if (_eMoveFlag == false)
 		{
 				// 攻撃
-				_enemy = LoadGraphScreen(_ePosX-25, 400, "image/enemy/test3.png", true);// 仮画像
+				_enemy = LoadGraphScreen(enemyPos.x -25, 400, "image/enemy/test3.png", true);// 仮画像
 
-				DrawBox(_ePosX, 550 - 75, _ePosX - 25, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
+				DrawBox(enemyPos.x, 550 - 75, enemyPos.x - 25, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
 		}
 	}
 	else
@@ -325,7 +329,6 @@ bool GameScene::GameDraw(void)
 	}
 	StatusDraw();
 	PlayerColor();
-	DrawFormatString(SCREEN_SIZE_X / 2, SCREEN_SIZE_Y / 2, GetColor(0, 0, 0), "[%d\n%d]", playerLife, testNum);
 	triangle = LoadGraphScreen(215, trianglePosY, "image/check.png", true);// 仮画像
 	
 	ScreenFlip();
@@ -344,7 +347,9 @@ void GameScene::StatusDraw(void)
 
 	// この線より右、タイムとかスコアが入るとこ
 	DrawLine(SCREEN_SIZE_X-200, 550, SCREEN_SIZE_X-200, 700, GetColor(0, 255, 0), false);
-	 LoadGraphScreen(SCREEN_SIZE_X-180, 570, "image/num.png", true);
+	DrawFormatString(SCREEN_SIZE_X - 180, 570, GetColor(255, 255, 255), "[%d\n]", score);
+	LoadGraphScreen(SCREEN_SIZE_X-180, 570, "image/num.png", true);
+
 // この線の左右に色バー
 	DrawLine(SCREEN_SIZE_X /2, 550, SCREEN_SIZE_X/2, 700, GetColor(0, 255, 0), false);
 
@@ -374,30 +379,30 @@ void GameScene::StatusDraw(void)
 
 }
 
-void GameScene::StageControl(void)
-{
-	// 画面真ん中よりプレイヤーの座標が右にきていたら真ん中をずらす
-	//if (centerPos.x <= playerPos.x)
-	//{
-	//	// centerに来たら背景画像を左にずらしていく
-	//	centerPos.x += 5;
-	//}
-	// X方向
-	//if (mapPos.x < 0)
-	//{
-	//	mapPos.x = 0;
-	//}
-	//if (mapPos.x > playerPos.x*5-SCREEN_SIZE_X)
-	//{
-	//	mapPos.x =2;
-	//}
-	//if (SCREEN_SIZE_X/2 <= playerPos.x)
-	//{
-	//	mapPos.x += SCREEN_SIZE_X;
-
-	//}
-	//bgImage = LoadGraphScreen(0, 0, "stage/testStage.png", true);
-}
+//void GameScene::StageControl(void)
+//{
+//	// 画面真ん中よりプレイヤーの座標が右にきていたら真ん中をずらす
+//	if (centerPos.x <= playerPos.x)
+//	{
+//		// centerに来たら背景画像を左にずらしていく
+//		centerPos.x += 5;
+//	}
+//	// X方向
+//	if (mapPos.x < 0)
+//	{
+//		mapPos.x = 0;
+//	}
+//	if (mapPos.x > playerPos.x*5-SCREEN_SIZE_X)
+//	{
+//		mapPos.x =2;
+//	}
+//	if (SCREEN_SIZE_X/2 <= playerPos.x)
+//	{
+//		mapPos.x += SCREEN_SIZE_X;
+//
+//	}
+//	bgImage = LoadGraphScreen(0, 0, "stage/testStage.png", true);
+//}
 
 void GameScene::ChangeColor(void)
 {
@@ -432,7 +437,7 @@ void GameScene::PlayerColor(void)
 	{
 		// 攻撃
 		DrawBox(playerPos.x + 75, 550 - 75, playerPos.x + _pAtackRange + 75, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
-		_player = LoadGraphScreen(playerPos.x, playerPos.y - 150, "image/player/pTest2.png", true);// 仮画像
+		_player = LoadGraphScreen(playerPos.x, playerPos.y - 150, "image/player/wAttack.png", true);// 仮画像
 		//_player=SetBlendGraph
 		_atackFlag = false;
 	}
@@ -446,12 +451,12 @@ void GameScene::PlayerColor(void)
 			//_player = 
 					//_player = LoadGraphScreen(_pPosX, _pPosY - 150, "image/player/pTest.png", true);// 仮画像
 			//}
-			_player = LoadGraphScreen(playerPos.x, playerPos.y - 150, "image/player/pDamage.png", true);// 仮画像
+			_player = LoadGraphScreen(playerPos.x, playerPos.y - 150, "image/player/wDamage.png", true);// 仮画像
 
 		}
 		else
 		{
-			_player = LoadGraphScreen(playerPos.x, playerPos.y - 150, "image/player/pTest.png", true);// 仮画像
+			_player = LoadGraphScreen(playerPos.x, playerPos.y - 150, "image/player/wIdle.png", true);// 仮画像
 
 		}
 
@@ -473,7 +478,7 @@ int GameScene::Init(void)
 	//frendPos = playerPos.x - 75;
 	//hitFrend = false;
 	// エネミー
-	_ePosX = SCREEN_SIZE_X / 2;
+	enemyPos = { VECTOR2(SCREEN_SIZE_X / 2,550) };
 	_eMoveFlag = true;
 	_atackFlag = false;
 	moveFlag = false;
@@ -485,7 +490,6 @@ int GameScene::Init(void)
 	//centerPos = VECTOR2{ SCREEN_SIZE_X/2,SCREEN_SIZE_Y / 2 };
 	//bgPosX1=0;				// 横サイズ1
 	bgImage = LoadGraph("stage/testStage.png");
-
 	testNum = 1;
 	playerColor = COLOR_TYPE::RED;
 	enemyColor = COLOR_TYPE::GREEN;
@@ -494,6 +498,7 @@ int GameScene::Init(void)
 	//};
 	auto marlerPos = VECTOR2(215, 570);
 	markerPos[0] = VECTOR2(215, 570);
-	lpStageCtl.GetStage(playStage);
+
+	score = 0;
 	return 0;
 }

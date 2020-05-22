@@ -50,11 +50,15 @@ private:
 	int _damage;
 	int hpBox;
 	int playerLife;
+	int jumpCnt;
 	//float frendPos;
 	//bool hitFrend;
+
+
+
 	// enemy
 	int _enemy;		// 絵
-	float _ePosX;	// 座標
+	VECTOR2 enemyPos;
 	bool _eMoveFlag;	// 動くかどうか　true=動く false=動かない(動かず攻撃)
 	bool _eDeathFlag;// 死んでいるかどうか
 	int enemyLife;
@@ -70,8 +74,8 @@ private:
 	STAGE playStage;
 
 	int bgImage;
-	//int bgPosX1;				// 横サイズ1
-	//VECTOR2 centerPos;// 画面中央
+	int bgPosX1;				// 横サイズ1
+	VECTOR2 centerPos;// 画面中央
 
 	VECTOR2 markerPos[3];
 	COLOR_TYPE colorType[static_cast<int>(COLOR_TYPE::MAX)];
@@ -79,5 +83,7 @@ private:
 	int testNum;
 	COLOR_TYPE enemyColor;
 	COLOR_TYPE playerColor;
-	//int score;
+	
+	
+	int score;
 };

@@ -16,6 +16,8 @@ public:
 //	STAGE StageLoad(STAGE getStage, VECTOR2 pos, std::string f_name,bool flag);
 	//bool StageLoad1(void);
 	//bool StageLoad2(void);
+
+
 private:
 
 	virtual int Init(void);	
