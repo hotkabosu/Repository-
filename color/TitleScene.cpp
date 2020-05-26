@@ -28,22 +28,19 @@ unique_Base TitleScene::Updata(unique_Base own, const GameCtl& ctl)
 		//	}
 		//if (changeFlag == true)
 		//{
-		_oldScene = SCENE_TYPE_TITLE;
+		//_oldScene = SCENE_TYPE_TITLE;
 			return std::make_unique<SelectScene>();
 			//changeFlag = false;
 		//}
 	}
 	//DrawFormatString(50, 50, 0xff0000, "%f", _time);
-
+	//
 	// ストーリーを見るかゲームを始めるか選べれるように
 	//if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_S] == 1
 	//	&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_S] == 0)
 	//{
 	//	startButton = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2, "image/title/tsButton0.png", true);
-
 	//}
-
-
 	//if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_S])
 	//{
 	//	if ((flamCnt / 20) % 2 == 0)
@@ -114,7 +111,7 @@ int TitleScene::Init(void)
 	bright = 255;
 	fadeCnt = 0;
 	flamCnt = 0;
-	_nowScene = SCENE_TYPE_TITLE;
+	//_nowScene = SCENE_TYPE_TITLE;
 	selectFlag = true;
 	//_time = 0;
 	//changeFlag = false;

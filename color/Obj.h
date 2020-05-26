@@ -23,8 +23,6 @@ enum ANIM_TBL {			// ±ÆÒ°¼®ÝÃ°ÌÞÙ
 enum OBJ_TYPE {
 	OBJ_TYPE_PLAYER,
 	OBJ_TYPE_ENEMY,
-	OBJ_TYPE_BOMB,
-	OBJ_TYPE_EDIT_CUR,
 	OBJ_TYPE_MAX
 };
 

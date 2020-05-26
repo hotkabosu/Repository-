@@ -1,10 +1,10 @@
 #include "Dxlib.h"
-#include "SelectScene.h"
 #include "SceneMng.h"
-#include "GameCtl.h"
 #include "TitleScene.h"
+#include "SelectScene.h"
 #include "GameScene.h"
-
+#include "GameCtl.h"
+#include "StageCtl.h"
 
 SelectScene::SelectScene()
 {
@@ -36,9 +36,7 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 			{
 				selectPos.y -= 270;
 			}
-			decided=lpStageCtl.FirstStage(STAGE::FIRST);
-			selectStage = STAGE::FIRST;
-			//	Stage(stage1, STAGE::FIRST);
+			_stageNum -= 1;
 		}
 		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_S] == 1
 			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_S] == 0)
@@ -53,43 +51,37 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl & ctl)
 			{
 				selectPos.y += 270;
 			}
-		//	Stage(stage2, STAGE::SECOND);
-			decided=lpStageCtl.SecondStage(STAGE::SECOND);
-			selectStage = STAGE::SECOND;
-			//}
+			_stageNum += 1;
 		}
-		//else
-		//{
-		//	decided = lpStageCtl.FirstStage(STAGE::FIRST);
-		//	selectStage = STAGE::FIRST;
-		//}
 	}
 	
 	if (selectFlag == true)
 	{
 		changeTime++;
 		// エンターを押したらchangeTime加算
-		//　changeTimeが50になるまで点滅を早く　50を超えたらゲームシーンに移動
-		if (selectStage == STAGE::FIRST)
-		{
-
-		}
-		
+		//　changeTimeが50になるまで点滅を早く　50を超えたらゲームシーンに移動		
 		
 		if (50 <= changeTime)
 		{
 			selectFlag = false;
-			lpStageCtl.getStage();
 			return std::make_unique<GameScene>();
 		}
 
 	}
 
 	// 決定したら
+	if (_stageNum == 1)
+	{
+		selectStage = STAGE::FIRST;
+	}
+	else if (_stageNum == 2)
+	{
+		selectStage = STAGE::SECOND;
 
-	SelectDraw();
+	}
+		SelectDraw();
 	flamCnt++;
-	
+	lpStageCtl.setStage(selectStage);
 	return std::move(own);
 }
 
@@ -115,7 +107,7 @@ bool SelectScene::FadeInScreen(int fadeStep)
 //{
 //	return false;
 //}
-
+//
 //STAGE SelectScene::StageLoad()
 //{
 //	stage1 = LoadGraph("image/select/testStage.png");
@@ -156,15 +148,11 @@ bool SelectScene::SelectDraw(void)
 		}
 
 	}
-	stage1 = LoadGraphScreen(100, 50, "image/select/testStage.png", true);
-	stage2 = LoadGraphScreen(100, 320, "image/select/testStage2.png", true);
+	_stage[static_cast<int>(STAGE::FIRST)] = LoadGraphScreen(100, 50, "image/select/testStage.png", true);
+	_stage[static_cast<int>(STAGE::SECOND)] = LoadGraphScreen(100, 320, "image/select/testStage2.png", true);
 	DrawFormatString(SCREEN_SIZE_X / 2, SCREEN_SIZE_Y / 2, GetColor(255, 255, 255), "[%d\n]", selectPos.y);
 
-	if (selectStage == STAGE::FIRST)
-	{
-		DrawFormatString(450, 450, GetColor(255, 0, 255), "PLAY　STAGE１　？");
-
-	}
+	DrawFormatString(SCREEN_SIZE_X - 50, 570, GetColor(255, 255, 255), "[%d]", _stageNum);
 
 
 	ScreenFlip();
@@ -179,6 +167,7 @@ int SelectScene::Init(void)
 	selectPos = { VECTOR2(80,30) };
 	nowPos.y = selectPos.y;
 	changeTime = 0;
+	_stageNum = 1;
 	selectFlag = false;
 	//decided = lpStageCtl.FirstStage(STAGE::FIRST);
 	return 0;

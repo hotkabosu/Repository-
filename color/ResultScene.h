@@ -1,5 +1,7 @@
 #pragma once
 #include "BaseScene.h"
+#include "SceneMng.h"
+#include "VECTOR2.h"
 
 class GameCtl;
 
@@ -16,6 +18,14 @@ private:
 
 	virtual int Init(void);
 
+	int reTitleButton;
+	int reStartButton;
+	int reSelectButton;
+	VECTOR2 resultPos;// 80 160
 
+
+	int changeScene[3];
+	int changeNum;
+	SCENE_TYPE scene;
 };
 

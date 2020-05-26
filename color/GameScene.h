@@ -31,11 +31,14 @@ public:
 
 	virtual unique_Base Updata(unique_Base own, const GameCtl& ctl);
 	void HitCheck(void);
+	void BossCheck(void);
 	void StatusDraw(void);
 	void StageControl(void);
 	void ChangeColor(void);
 	void PlayerColor(void);
 
+	void AddScore(void);
+	void StageDraw(void);
 private:
 	sharedListObj objList;
 	virtual int Init(void);
@@ -43,14 +46,22 @@ private:
 	
 	// Player
 	int _player;// ‰æ‘œ
-	bool _atackFlag;
-	bool moveFlag;
+	bool _atackFlag;	// ‹ß‹——£UŒ‚
+	bool moveFlag;	// “®‚¯‚é‚©‚Ç‚¤‚©
+	bool jumpFlag;
+	bool underFlag;
 	VECTOR2 playerPos;// À•W
 	float _pAtackRange;// UŒ‚”ÍˆÍ
 	int _damage;
-	int hpBox;
+	int hpBox;		
 	int playerLife;
 	int jumpCnt;
+	// ‰“‹——£UŒ‚
+	int _shot;
+	int _shotSpeed;
+	int _shotSize;
+	bool _shotFlag;
+	VECTOR2 _shotPos;
 	//float frendPos;
 	//bool hitFrend;
 
@@ -84,6 +95,9 @@ private:
 	COLOR_TYPE enemyColor;
 	COLOR_TYPE playerColor;
 	
-	
+	int _gBoss;
+	int _bossLife;
+	bool _bossFlag;
 	int score;
+	int highScore;
 };

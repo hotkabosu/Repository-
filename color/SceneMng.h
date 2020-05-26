@@ -6,13 +6,13 @@
 #include "BaseScene.h"
 
 
-enum SCENE_TYPE
+enum class SCENE_TYPE
 {
-	SCENE_TYPE_TITLE,
-	SCENE_TYPE_SELECT,
-	SCENE_TYPE_GAME,
-	SCENE_TYPE_RESULT,
-	SCENE_TYPE_MAX,
+	TITLE,
+	SELECT,
+	GAME,
+	RESULT,
+	MAX,
 };
 
 class Obj;

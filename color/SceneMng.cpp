@@ -2,6 +2,7 @@
 #include "SceneMng.h"
 #include "GameCtl.h"
 #include "TitleScene.h"
+#include "ResultScene.h"
 #include"SelectScene.h"
 #include "GameScene.h"
 

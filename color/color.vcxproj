@@ -23,6 +23,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="classObj.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="ImageMng.cpp" />
     <ClCompile Include="GameCtl.cpp" />
@@ -31,7 +32,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="SceneMng.cpp" />
-    <ClCompile Include="Scroll.cpp" />
+    <ClCompile Include="ScoreMng.cpp" />
     <ClCompile Include="SelectScene.cpp" />
     <ClCompile Include="StageCtl.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="classObj.h" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ImageMng.h" />
     <ClInclude Include="GameCtl.h" />
@@ -49,7 +51,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="SceneMng.h" />
-    <ClInclude Include="Scroll.h" />
+    <ClInclude Include="ScoreMng.h" />
     <ClInclude Include="SelectScene.h" />
     <ClInclude Include="StageCtl.h" />
     <ClInclude Include="TitleScene.h" />

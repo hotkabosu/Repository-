@@ -29,8 +29,11 @@ private:
 	int flamCnt;
 
 	int backImage;
+	int _stage[2];
+	int _stageNum;
 	int stage1;
 	int stage2;
+
 	VECTOR2 selectPos;// 80 160
 	VECTOR2 nowPos;
 	int changeTime;
