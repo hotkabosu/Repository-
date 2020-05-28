@@ -25,7 +25,7 @@ class GameCtl;
 #define SCREEN_SIZE_Y 700	//600
 
 #define PLAY_SIZE_X 2400
-#define PLAY_SIZE_Y 1100
+#define PLAY_SIZE_Y 500
 
 #define CHIP_SIZE_X 50
 #define CHIP_SIZE_Y 50

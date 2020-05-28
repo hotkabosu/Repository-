@@ -44,12 +44,14 @@ void StageCtl::Draw(void)
 //	return false;
 //}
 //
-void StageCtl::FirstStage(void)
+void StageCtl::FirstStage(VECTOR2 pos)
 {
-	bgImage = LoadGraphScreen(0, 0, "stage/testStage.png", true);
+	//bgImage = LoadGraphScreen(pos.x, pos.y, "stage/testStage.png", true);
+	bgImage = LoadGraphScreen(pos.x, pos.y, "stage/test2Long.png", true);
 }
 
-void StageCtl::SecondStage(void)
+void StageCtl::SecondStage(VECTOR2 pos)
 {
-	bgImage = LoadGraphScreen(0, 0, "stage/testStage2.png", true);
+//	bgImage = LoadGraphScreen(pos.x, pos.y, "stage/testStage2.png", true);
+	bgImage = LoadGraphScreen(pos.x, pos.y, "stage/test2Long.png", true);
 }

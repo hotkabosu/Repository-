@@ -23,8 +23,8 @@ public:
 //	void SetEnemy(const VECTOR2& pos, weakListObj objList);
 	void Draw(void);
 	//bool MapLoad(void);		// Ï¯Ìß‚ğÛ°ÄŞ
-	void FirstStage(void);	// ÃŞÌ«ÙÄÏ¯Ìß(Â)‚ğÛ°ÄŞ
-	void SecondStage(void);	// ÃŞÌ«ÙÄÏ¯Ìß(Ô)‚ğÛ°ÄŞ
+	void FirstStage(VECTOR2 pos);	// ÃŞÌ«ÙÄÏ¯Ìß(Â)‚ğÛ°ÄŞ
+	void SecondStage(VECTOR2 pos);	// ÃŞÌ«ÙÄÏ¯Ìß(Ô)‚ğÛ°ÄŞ
 
 	STAGE getStage(void);
 	void setStage(STAGE stage);

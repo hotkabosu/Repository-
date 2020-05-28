@@ -16,8 +16,22 @@ enum DAMAGE
 	DAMAGE_MAX
 };
 
+enum class ENEMY_COLOR
+{
+	NON,
+	RED,
+	BLUE,
+	GREEN,
+	MAX
+};
 
-
+enum class ENEMY_TYPE
+{
+	NON,
+	NORMAL,
+	BOSS,
+	MAX
+};
 
 class GameCtl;
 class Obj;
@@ -30,15 +44,17 @@ public:
 	~GameScene();
 
 	virtual unique_Base Updata(unique_Base own, const GameCtl& ctl);
-	void HitCheck(void);
+	void NormalEnemy(void);
 	void BossCheck(void);
 	void StatusDraw(void);
 	void StageControl(void);
 	void ChangeColor(void);
-	void PlayerColor(void);
+	void PlayerCtl(void);
+	void PlayerDraw(void);
 
 	void AddScore(void);
 	void StageDraw(void);
+
 private:
 	sharedListObj objList;
 	virtual int Init(void);
@@ -49,13 +65,15 @@ private:
 	bool _atackFlag;	// ãﬂãóó£çUåÇ
 	bool moveFlag;	// ìÆÇØÇÈÇ©Ç«Ç§Ç©
 	bool jumpFlag;
+	int jumpCnt;
 	bool underFlag;
 	VECTOR2 playerPos;// ç¿ïW
+	VECTOR2 playerOldPos;
 	float _pAtackRange;// çUåÇîÕàÕ
 	int _damage;
+	bool _damageFlag;
 	int hpBox;		
 	int playerLife;
-	int jumpCnt;
 	// âìãóó£çUåÇ
 	int _shot;
 	int _shotSpeed;
@@ -69,17 +87,19 @@ private:
 
 	// enemy
 	int _enemy;		// äG
+	VECTOR2 enemyAtackRange;
 	VECTOR2 enemyPos;
 	bool _eMoveFlag;	// ìÆÇ≠Ç©Ç«Ç§Ç©Å@true=ìÆÇ≠ false=ìÆÇ©Ç»Ç¢(ìÆÇ©Ç∏çUåÇ)
 	bool _eDeathFlag;// éÄÇÒÇ≈Ç¢ÇÈÇ©Ç«Ç§Ç©
 	int enemyLife;
 	// ÇªÇÃÇŸÇ©
 	int stageBack;	// îwåiâÊëú
-	DIR dir;
+	DIR playerDir;
 	int flamCnt;
+	int oldFlam;
 	int triangle;
 	int trianglePosY;
-	//VECTOR2 mapPos;
+	VECTOR2 mapPos;
 //	const GameCtl& test;
 	int time;
 	STAGE playStage;
@@ -91,11 +111,16 @@ private:
 	VECTOR2 markerPos[3];
 	COLOR_TYPE colorType[static_cast<int>(COLOR_TYPE::MAX)];
 	int nowColor[3];
-	int testNum;
+	int colorNum;
+	int enemyNum;
+	ENEMY_TYPE enemyTypetest[static_cast<int>(ENEMY_TYPE::MAX)];
+
 	COLOR_TYPE enemyColor;
+	ENEMY_COLOR enemyType;
 	COLOR_TYPE playerColor;
 	
 	int _gBoss;
+	VECTOR2 _bossPos;
 	int _bossLife;
 	bool _bossFlag;
 	int score;
