@@ -46,12 +46,12 @@ void StageCtl::Draw(void)
 //
 void StageCtl::FirstStage(VECTOR2 pos)
 {
-	//bgImage = LoadGraphScreen(pos.x, pos.y, "stage/testStage.png", true);
-	bgImage = LoadGraphScreen(pos.x, pos.y, "stage/test2Long.png", true);
+	bgImage = LoadGraphScreen(pos.x, pos.y, "stage/testStage.png", true);
+	//bgImage = LoadGraphScreen(pos.x, pos.y, "stage/test2Long.png", true);
 }
 
 void StageCtl::SecondStage(VECTOR2 pos)
 {
-//	bgImage = LoadGraphScreen(pos.x, pos.y, "stage/testStage2.png", true);
-	bgImage = LoadGraphScreen(pos.x, pos.y, "stage/test2Long.png", true);
+	bgImage = LoadGraphScreen(pos.x, pos.y, "stage/testStage2.png", true);
+	//bgImage = LoadGraphScreen(pos.x, pos.y, "stage/test2Long.png", true);
 }

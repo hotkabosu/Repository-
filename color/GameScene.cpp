@@ -1,11 +1,12 @@
 #include "DxLib.h"
 #include "GameCtl.h"
 #include "SceneMng.h"
+#include "HelpMode.h"
 #include "GameScene.h"
 #include "SelectScene.h"
+#include "TitleScene.h"
 #include "ResultScene.h"
 #include "Enemy.h"
-#include "Camera.h"
 #include "ScoreMng.h"
 #include "Obj.h"
 
@@ -30,99 +31,149 @@ unique_Base GameScene::Updata(unique_Base own, const GameCtl& ctl)
 	// プレイヤーのHPがあるかつ敵が生きているときは動いてもよい
 
 	// ボスが生きているてプレイヤーが生きている＝ゲームが続いている
-	if (0 <= _bossLife&& 0<=playerLife)
+	if (/*0 <= _bossLife&&*/ 0<=playerLife)
 	{
-		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_RCONTROL] == 1
-			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_RCONTROL] == 0)
+		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_RSHIFT] == 1
+			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_RSHIFT] == 0)
 		{
-			ChangeColor();
-			colorNum += 1;
+			helpFlag = true;
+			lpHelpMode.setHelpFlag(helpFlag);
+
 		}
 		
-		// Dを押したら右移動
-		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_D])
+		if (helpFlag == false)
 		{
-			playerPos.x += 5;
-			//frendPos += 5;
-			//moveFlag = true;
-			playerDir = DIR_RIGHT;
-		}
-		//else
-		//{
-		//	moveFlag = false;
-		//}
-		// 左に移動
-		else if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_A])
-		{
-			//if (mapPos.x <= playerPos.x)
-			//{
-			//	playerPos.x -= 5;
-			//	//frendPos -= 5;
-			//}
-			if (0 <= playerPos.x)
+
+			if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_RCONTROL] == 1
+				&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_RCONTROL] == 0)
 			{
-				playerPos.x -= 5;
-				//frendPos -= 5;
+				ChangeColor();
+				colorNum += 1;
+			}
+
+			// Dを押したら右移動
+			if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_D])
+			{
+				playerPos.x += 5;
+				//frendPos += 5;
+				//moveFlag = true;
+				playerDir = DIR_RIGHT;
+			}
+			//else
+			//{
+			//	moveFlag = false;
+			//}
+			// 左に移動
+			else if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_A])
+			{
+				//if (mapPos.x <= playerPos.x)
+				//{
+				//	playerPos.x -= 5;
+				//	//frendPos -= 5;
+				//}
+				if (0 <= playerPos.x)
+				{
+					playerPos.x -= 5;
+					//frendPos -= 5;
+				}
+				else
+				{
+					playerPos.x += 1;
+				}
+				playerDir = DIR_LEFT;
 			}
 			else
 			{
-				playerPos.x += 1;
+				playerDir = DIR_MAX;
 			}
-			playerDir = DIR_LEFT;
+			if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_W] == 1
+				&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_W] == 0)
+			{
+				jumpFlag = true;
+				playerOldPos.y = playerPos.y; // ジャンプする前の座標を保存
+			}
+			if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_S])
+			{
+				underFlag = true;
+			}
+			else
+			{
+				underFlag = false;
+			}
+			// 攻撃
+			if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_K])
+			{
+				_atackFlag = true;
+			}
+			// 遠距離攻撃		
+			if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_L] == 1
+				&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_L] == 0)
+			{
+				_shotFlag = true;
+			}
+
+			NormalEnemy();
 		}
-		else
-		{
-			playerDir = DIR_MAX;
-		}
+	}
+	//if (_bossLife<=0)
+	//{
+	//	time++;
+	//	if (50 <= time)
+	//	{
+
+			//return std::make_unique<ResultScene>();
+
+	//	}
+	//}
+	if (playerLife <= 0)
+	{
+		GameOverDraw();
+		// プレイヤー敗北
 		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_W] == 1
 			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_W] == 0)
 		{
-			jumpFlag = true;
-			playerOldPos.y = playerPos.y; // ジャンプする前の座標を保存
+			// 上のステージ
+			if (2 <= _buttonNum)
+			{
+				_buttonNum -= 1;
+				//selectPos.y -= 270;
+			}
 		}
-		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_S])
+		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_S] == 1
+			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_S] == 0)
 		{
-			underFlag = true;
+			// 下のステージ
+			if (_buttonNum < 3)
+			{
+				_buttonNum += 1;
+				//selectPos.y += 270;
+			}
 		}
-		else
-		{
-			underFlag = false;
-		}
-		// 攻撃
-		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_K])
-		{
-			_atackFlag = true;
-		}
-		// 遠距離攻撃		
-		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_L] == 1
-			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_L] == 0)
-		{
-			_shotFlag = true;
-		}
-
-		//NormalEnemy();
-
-	}
-	if (_bossLife<=0)
-	{
-		time++;
-		if (50 <= time)
-		{
-
-			return std::make_unique<ResultScene>();
-
-		}
-	}
-	if (playerLife <= 0)
-	{
-		// プレイヤー敗北
+		
 		if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_RETURN] == 1
 			&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_RETURN] == 0)
 		{
-			SetDrawBright(255, 255, 255);
+			if (_buttonNum == 1)
+			{
 
-			return std::make_unique<GameScene>();
+				return std::make_unique<SelectScene>();
+			}
+			else if (_buttonNum == 3)
+			{
+				return std::make_unique<TitleScene>();
+
+			}
+			else if (_buttonNum == 3)
+			{
+				return std::make_unique<GameScene>();
+
+			}
 		}
+		//if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_L] == 1
+		//	&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_L] == 0)
+		//{
+		//	return std::make_unique<ResultScene>();
+		//}
 
 
 	}
@@ -160,8 +211,17 @@ unique_Base GameScene::Updata(unique_Base own, const GameCtl& ctl)
 		(*itr)->Update(ctl, objList);
 	}
 
+	if (helpFlag == true)
+	{
+		lpHelpMode.HelpDraw();
+	//	lpHelpMode.Updata(own,ctl);
 
 
+	}
+	else
+	{
+		GameDraw();
+	}
 	//if (_atackFlag == true
 	//	&& _pPosX + _pAtackRange + 75 >= _ePosX)// 右側攻撃の範囲に入ってた時
 	//	//&& _ePosX + 75 >= _pPosX)
@@ -182,13 +242,12 @@ unique_Base GameScene::Updata(unique_Base own, const GameCtl& ctl)
 	//playerColor;
 	//color[testNum];
 
-//	lpCamera.CameraControl(playerPos, centerPos);
-	BossCheck();
+	//BossCheck();
 	StageControl();
 	PlayerCtl();
 	AddScore();
 	lpScoreMng.setScore(highScore);
-	GameDraw();
+	//GameDraw();
 	flamCnt++;
 
 	return std::move(own);
@@ -201,8 +260,8 @@ void GameScene::NormalEnemy(void)
 		//　
 		enemyType = ENEMY_COLOR::NON;
 		_eDeathFlag = true;
-		_bossFlag = true;
-
+		//_bossFlag = true;
+		//_bossMoveFlag = true;
 	}
 	else
 	{// 動くかどうか
@@ -253,64 +312,101 @@ void GameScene::NormalEnemy(void)
 					}
 				}
 			}
-			playerLife -= _damage;
 		}
 		//}
 	}
+	playerLife -= _damage;
 
 	enemyAtackRange = { enemyPos.x - 25,400 };
 }
 
 /*BOSS*/
-void GameScene::BossCheck(void)
-{
-	if (_bossFlag == true)// プレイヤーが攻撃したとき=エネミーがダメージを受ける場合
-	{
-		if (playerPos.x + 125 <= _bossPos.x - 25)
-		{
-			// プレイヤーより右側にいたら左（プレイヤー側）に移動
-			_bossPos.x -= 2;
-
-		}
-		else if (_bossPos.x + 55 <= playerPos.x)
-		{
-			// プレイヤーより左側にいたら右（プレイヤー側）に移動
-			_bossPos.x += 2;
-		}
-
-		if ((playerPos.x + _pAtackRange + 75 >= _bossPos.x))
-		{
-			// 少し離れる
-			_bossPos.x += 50;
-			if (enemyColor == COLOR_TYPE::GREEN)
-			{
-				if (playerColor == COLOR_TYPE::RED)
-				{
-					_bossLife -= 3;
-					score += 30;
-				}
-				else if (playerColor == COLOR_TYPE::BLUE)
-				{
-					_bossLife -= 1;
-					score += 10;
-				}
-				else if (playerColor == COLOR_TYPE::GREEN)
-				{
-					_bossLife -= 2;
-					score += 20;
-				}
-
-			}
-			//_eDeathFlag = true;
-		}
-	}
-	if (_bossLife <= 0)
-	{
-		//　
-		_bossFlag = false;
-	}
-
-}
+//void GameScene::BossCheck(void)
+//{
+//	if (_bossFlag == true)// プレイヤーが攻撃したとき=エネミーがダメージを受ける場合
+//	{
+//
+//		if ((playerPos.x + _pAtackRange + 15 >= _bossPos.x))
+//		{
+//			// 少し離れる
+//			_bossPos.x += 50;
+//			if (enemyColor == COLOR_TYPE::GREEN)
+//			{
+//				if (playerColor == COLOR_TYPE::RED)
+//				{
+//					_bossLife -= 3;
+//					score += 30;
+//				}
+//				else if (playerColor == COLOR_TYPE::BLUE)
+//				{
+//					_bossLife -= 1;
+//					score += 10;
+//				}
+//				else if (playerColor == COLOR_TYPE::GREEN)
+//				{
+//					_bossLife -= 2;
+//					score += 20;
+//				}
+//
+//			}
+//			//_eDeathFlag = true;
+//		}
+//	}
+//
+//
+//	if (_bossMoveFlag == true)
+//	{
+//		if (playerPos.x + 125 <= _bossPos.x - 25)
+//		{
+//			// プレイヤーより右側にいたら左（プレイヤー側）に移動
+//			_bossPos.x -= 2;
+//
+//		}
+//		else if (_bossPos.x + 55 <= playerPos.x)
+//		{
+//			// プレイヤーより左側にいたら右（プレイヤー側）に移動
+//			_bossPos.x += 2;
+//		}
+//
+//	}
+//	else
+//	{
+//		if (playerPos.x + 125 >= enemyAtackRange.x)
+//			//&&(enemyAtackRange.y <= playerPos.y + 150)
+//			//	&&(playerPos.y+150<=enemyAtackRange.y+75))
+//		{// 近くに来たらプレイヤーに攻撃
+//			playerPos.x -= 25;
+//			oldFlam = flamCnt;
+//			_damageFlag = true;
+//			if (enemyColor == COLOR_TYPE::GREEN)
+//			{
+//				if (playerColor == COLOR_TYPE::RED)
+//				{
+//					_damage = 8;
+//				}
+//				else if (playerColor == COLOR_TYPE::BLUE)
+//				{
+//					_damage = 24;
+//				}
+//				else if (playerColor == COLOR_TYPE::GREEN)
+//				{
+//					_damage = 16;
+//				}
+//
+//			}
+//		}
+//	}
+//	playerLife -= _damage;
+//	enemyAtackRange = { enemyPos.x - 50,400 };
+//
+//
+//	if (_bossLife <= 0)
+//	{
+//		//　
+//		_bossFlag = false;
+//	}
+//
+//}
 
 
 bool GameScene::GameDraw(void)
@@ -364,10 +460,10 @@ bool GameScene::GameDraw(void)
 	//	LoadGraphScreen(frendPos, playerPos.y - 150, "image/player/frend/frend2.png", true);
 
 	//}
-	if (_bossFlag == true)
-	{
-		_gBoss = LoadGraphScreen(_bossPos.x, _bossPos.y, "image/enemy/gBossBig.png", true);
-	}
+	//if (_bossFlag == true)
+	//{
+	//	_gBoss = LoadGraphScreen(_bossPos.x, _bossPos.y, "image/enemy/gBossBig.png", true);
+	//}
 	
 	//　敵が生きてるとき
 	if (_eDeathFlag == false)
@@ -406,6 +502,7 @@ bool GameScene::GameDraw(void)
 	{
 		SetDrawBright(255 / 2, 255 / 2, 255 / 2);
 		DrawFormatString(SCREEN_SIZE_X / 2, SCREEN_SIZE_Y / 2, GetColor(255, 255, 0), "GameOver　PushEnterKey");
+
 	}
 	StatusDraw();
 	PlayerDraw();
@@ -426,17 +523,25 @@ void GameScene::StatusDraw(void)
 	// この線より右、タイムとかスコアが入るとこ
 	DrawLine(SCREEN_SIZE_X-200, 550, SCREEN_SIZE_X-200, 700, GetColor(0, 255, 0), false);
 	DrawFormatString(SCREEN_SIZE_X - 50, 570, GetColor(255, 255, 255), "[%d]", score);
-	DrawFormatString(SCREEN_SIZE_X - 150, 650, GetColor(255, 255, 255), "[%d	%d]",mapPos.x,playerPos.x);
+	DrawFormatString(SCREEN_SIZE_X - 150, 650, GetColor(255, 255, 255), "[%d]", playerLife);
+	DrawFormatString(SCREEN_SIZE_X / 2+150, 570, GetColor(255, 255, 0), "右Shiftストップ");
 	//LoadGraphScreen(SCREEN_SIZE_X-180, 570, "image/num.png", true);
 
 // この線の左右に色バー
-	DrawLine(SCREEN_SIZE_X /2, 550, SCREEN_SIZE_X/2, 700, GetColor(0, 255, 0), false);
+	//DrawLine(SCREEN_SIZE_X /2, 550, SCREEN_SIZE_X/2, 700, GetColor(0, 255, 0), false);
 
 	// 色ゲージ
-	nowColor[static_cast<int>(COLOR_TYPE::RED)] = DrawBox(250, 570, SCREEN_SIZE_X / 2 - 50, 595, GetColor(255, 0, 0), true);// 赤
+	nowColor[static_cast<int>(COLOR_TYPE::RED)] = DrawBox(_gagePosX, 570, _gageEndPosX, 595, color[0], true);// 赤
 	
-	nowColor[static_cast<int>(COLOR_TYPE::BLUE)] = DrawBox(250, 620, SCREEN_SIZE_X / 2 - 50, 645, GetColor(0, 0, 255), true);// 青
-	nowColor[static_cast<int>(COLOR_TYPE::GREEN)] = DrawBox(250, 670, SCREEN_SIZE_X / 2 - 50, 695, GetColor(0, 255, 0), true);// 緑
+	nowColor[static_cast<int>(COLOR_TYPE::BLUE)] = DrawBox(_gagePosX, 620, _gageEndPosX, 645, color[1], true);// 青
+	nowColor[static_cast<int>(COLOR_TYPE::GREEN)] = DrawBox(_gagePosX, 670, _gageEndPosX, 695, color[2], true);// 緑
+
+	if ((_atackFlag == true) || (_shotFlag == true))
+	{// unsigned int
+		nowColor[colorNum] = DrawBox(_gagePosX, 570, _gageEndPosX-50, 595, color[colorNum], true);;
+		_gageEndPosX;
+	}
+
 
 	// GetColorがマイナスだと白になるからゲームオーバー時は0を指定
 	if (playerLife <= 0)
@@ -491,6 +596,7 @@ void GameScene::StageControl(void)
 		//}
 	}	//	bgImage = LoadGraphScreen(mapPos.x, mapPos.y, "stage/testStage.png", true);
 }
+
 
 
 void GameScene::ChangeColor(void)
@@ -594,10 +700,7 @@ void GameScene::PlayerCtl(void)
 	//	{
 	//		_player;
 	//	}
-
 	//}
-
-
 }
 
 void GameScene::PlayerDraw(void)
@@ -606,8 +709,8 @@ void GameScene::PlayerDraw(void)
 	// 遠距離攻撃
 	if (_shotFlag == true)
 	{
-		_shot = LoadGraphScreen(_shotPos.x, _shotPos.y, "image/player/baku.png", true);
-		if (SCREEN_SIZE_X < _shotPos.x)
+		_shot = LoadGraphScreen(_shotPos.x + mapPos.x, _shotPos.y, "image/player/baku.png", true);
+		if (SCREEN_SIZE_X < _shotPos.x + mapPos.x)
 		{
 			_shotFlag = false;
 		}
@@ -616,7 +719,7 @@ void GameScene::PlayerDraw(void)
 	if (_atackFlag == true)
 	{
 		// 攻撃
-		DrawBox(playerPos.x + 75, 550 - 75, playerPos.x + _pAtackRange + 75, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
+		DrawBox(playerPos.x + 75 + mapPos.x, 550 - 75, playerPos.x + _pAtackRange + 75 + mapPos.x, 550 - 150, GetColor(0, 255, 0), false);// 攻撃範囲
 		_player = LoadGraphScreen(playerPos.x + mapPos.x, playerPos.y - 150, "image/player/wAttack.png", true);// 仮画像
 		//_player=SetBlendGraph
 		_atackFlag = false;
@@ -653,18 +756,47 @@ void GameScene::PlayerDraw(void)
 		}
 		else
 		{
-			_player = LoadGraphScreen(playerPos.x + mapPos.x, playerPos.y - 150, "image/player/wIdle.png", true);// 仮画像
-			DrawBox(playerPos.x + mapPos.x, playerPos.y, playerPos.x + 150 + mapPos.x, playerPos.y - 150, GetColor(255, 0, 255), false);// プレイヤー
+			//_player = LoadGraphScreen(playerPos.x + mapPos.x, playerPos.y - 150, "image/player/wIdle.png", true);// 仮画像
+			//DrawBox(playerPos.x + mapPos.x, playerPos.y, playerPos.x + 150 + mapPos.x, playerPos.y - 150, GetColor(255, 0, 255), false);// プレイヤー
 			//if ((flamCnt / 50) % 2 == 0)
 			//{
 			//	_player;
 			//}
 
+			for (int j = 0; j < 4; j++)
+			{
+				DrawGraph(playerPos.x + mapPos.x, playerPos.y - 150, GHandle[j], true);
 
+			}
 		}
 
 	}
 
+
+}
+
+void GameScene::GameOverDraw(void)
+{	
+	
+	ClsDrawScreen();
+	//backImage = LoadGraphScreen(0, 0, "image/select/sBack0.png", true);
+	//DrawBox(_helpPos.x, _helpPos.y, _helpPos.x + 450, _helpPos.y + 100, GetColor(255, 255, 255), true);
+	//SetDrawBright(255, 255, 255);
+
+	DrawFormatString(150, 100, GetColor(255, 0, 255), "SelectStage　PushEnter");
+
+	//_helpTitle = LoadGraphScreen(SCREEN_SIZE_X / 3, 50, "image/helpMode/helpTitle.png", true);
+	// ボタン
+	_button[static_cast<int>(SCENE_TYPE::SELECT)] = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2 - 100, "image/helpMode/selectButton.png", true);
+	//_selectBackButton=LoadGraphScreen(_helpPos.x, _helpPos.y, "image/helpMode/selectButton.png", true);
+	_button[static_cast<int>(SCENE_TYPE::TITLE)] = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2, "image/helpMode/titleButton.png", true);
+	//_titleBackButton = LoadGraphScreen(_helpPos.x, _helpPos.y+100, "image/helpMode/titleButton.png", true);
+	_button[static_cast<int>(SCENE_TYPE::GAME)] = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2 + 100, "image/helpMode/playButton.png", true);
+	//_playBuckButton = LoadGraphScreen(_helpPos.x, _helpPos.y+200, "image/helpMode/playButton.png", true);
+
+
+	DrawFormatString(SCREEN_SIZE_X - 50, 450, GetColor(255, 255, 255), "[%d]", _buttonNum);
+	ScreenFlip();
 
 }
 
@@ -728,15 +860,22 @@ int GameScene::Init(void)
 	moveFlag = false;
 	_eDeathFlag = false;
 	enemyLife = 3;
-	_bossPos = { VECTOR2(SCREEN_SIZE_X - 200,300) };
-	_bossLife = 30;
-	_bossFlag = false;
+	//_bossPos = { VECTOR2(SCREEN_SIZE_X - 200,300) };
+	//_bossLife = 30;
+	//_bossFlag = false;
+	//_bossMoveFlag=false;
+
 	time =0;	
 
 	//centerPos = VECTOR2{ SCREEN_SIZE_X/2,SCREEN_SIZE_Y / 2 };
 	//bgPosX1=0;				// 横サイズ1
-	bgImage = LoadGraph("stage/testStage.png");
 	colorNum = 1;
+	_gagePosX = 250;
+	color[0] = GetColor(255, 0, 0);
+	color[1] = GetColor(0, 0, 255);
+	color[2] = GetColor(0, 255, 0);
+	_gageEndPosX = SCREEN_SIZE_X / 2;
+
 	playerColor = COLOR_TYPE::RED;
 	enemyColor = COLOR_TYPE::GREEN;
 	enemyType = ENEMY_COLOR::GREEN;
@@ -746,8 +885,12 @@ int GameScene::Init(void)
 	auto marlerPos = VECTOR2(215, 570);
 	markerPos[0] = VECTOR2(215, 570);
 
+	helpFlag = false;
 	score = 0;
 	flamCnt = 0;
 	oldFlam = flamCnt;
+
+	LoadDivGraph("image/player/bMove3.png", 4, 4, 1, 150, 150, GHandle, true);// 仮画像
+
 	return 0;
 }

@@ -44,16 +44,18 @@ public:
 	~GameScene();
 
 	virtual unique_Base Updata(unique_Base own, const GameCtl& ctl);
-	void NormalEnemy(void);
-	void BossCheck(void);
 	void StatusDraw(void);
 	void StageControl(void);
-	void ChangeColor(void);
-	void PlayerCtl(void);
-	void PlayerDraw(void);
 
 	void AddScore(void);
 	void StageDraw(void);
+
+	void NormalEnemy(void);
+	void BossCheck(void);
+	void PlayerCtl(void);
+	void ChangeColor(void);
+	void PlayerDraw(void);
+	void GameOverDraw(void);
 
 private:
 	sharedListObj objList;
@@ -61,6 +63,7 @@ private:
 	bool GameDraw(void);
 	
 	// Player
+	int GHandle[4];
 	int _player;// 画像
 	bool _atackFlag;	// 近距離攻撃
 	bool moveFlag;	// 動けるかどうか
@@ -110,8 +113,14 @@ private:
 
 	VECTOR2 markerPos[3];
 	COLOR_TYPE colorType[static_cast<int>(COLOR_TYPE::MAX)];
+	
+	
 	int nowColor[3];
 	int colorNum;
+	int _gagePosX;// 左側の基準座標
+	int _gageEndPosX;// 右側の座標　減ったり増えたりしているように見せるため
+	unsigned int color[3];
+	
 	int enemyNum;
 	ENEMY_TYPE enemyTypetest[static_cast<int>(ENEMY_TYPE::MAX)];
 
@@ -119,10 +128,15 @@ private:
 	ENEMY_COLOR enemyType;
 	COLOR_TYPE playerColor;
 	
-	int _gBoss;
-	VECTOR2 _bossPos;
-	int _bossLife;
-	bool _bossFlag;
+	//int _gBoss;
+	//VECTOR2 _bossPos;
+	//int _bossLife;
+	//bool _bossFlag;
+	//bool _bossMoveFlag;
 	int score;
 	int highScore;
+	bool helpFlag;
+
+	int _button[3];
+	int _buttonNum;
 };

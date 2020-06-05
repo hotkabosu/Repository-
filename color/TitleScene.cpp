@@ -22,6 +22,7 @@ unique_Base TitleScene::Updata(unique_Base own, const GameCtl& ctl)
 	if (ctl.GetCtl(KEY_TYPE_NOW)[KEY_INPUT_RETURN]==1
 		&& ctl.GetCtl(KEY_TYPE_OLD)[KEY_INPUT_RETURN] == 0)
 	{
+		selectFlag = true;
 		//	if (49 <= _time)
 		//	{
 		//		changeFlag = true;
@@ -29,10 +30,24 @@ unique_Base TitleScene::Updata(unique_Base own, const GameCtl& ctl)
 		//if (changeFlag == true)
 		//{
 		//_oldScene = SCENE_TYPE_TITLE;
-			return std::make_unique<SelectScene>();
 			//changeFlag = false;
 		//}
 	}
+	if (selectFlag == true)
+	{
+		PlaySoundMem(_titleSE, DX_PLAYTYPE_LOOP, false);
+		ChangeVolumeSoundMem(155, _titleBGM);
+		_time++;
+		if (50 <= _time)
+		{
+			DeleteSoundMem(_titleSE);
+			DeleteSoundMem(_titleBGM);
+			selectFlag = false;
+			return std::make_unique<SelectScene>();
+
+		}
+	}
+
 	//DrawFormatString(50, 50, 0xff0000, "%f", _time);
 	//
 	// ストーリーを見るかゲームを始めるか選べれるように
@@ -50,55 +65,43 @@ unique_Base TitleScene::Updata(unique_Base own, const GameCtl& ctl)
 	//}
 
 
-		flamCnt++;
-
+	flamCnt++;
 	TitleDraw();
 	return std::move(own);
 }
 
-bool TitleScene::FadeOutScreen(int fadeStep)
-{
-	fadeCnt += fadeStep;
-	if (fadeCnt <= 255)
-	{
-		SetDrawBright(255 - fadeCnt, 255 - fadeCnt, 255 - fadeCnt);
-		return true;
-	}
-	else
-	{
-		SetDrawBright(0, 0, 0);
-		fadeCnt = 0;
-		return false;
-	}
-}
-
-
 
 bool TitleScene::TitleDraw(void)
 {
+	PlaySoundMem(_titleBGM, DX_PLAYTYPE_LOOP, false);
 	ClsDrawScreen();
 
 	DrawFormatString(150, 150, GetColor(255, 0, 255), "TitleScene");
 	backImage = LoadGraphScreen(0, 0, "image/title/Back.png", true);
 	// 点滅
-	if ((flamCnt / 20) % 2 == 0)
+	if (selectFlag == false)
 	{
-		startButton = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2, "image/title/tsButton1.png", true);
+		if ((flamCnt / 10) % 2 == 0)
+		{
+			startButton = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2, "image/title/tsButton1.png", true);
+		}
 	}
-
-	//DrawBox(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2, SCREEN_SIZE_X / 3+400, SCREEN_SIZE_Y / 2+100, GetColor(255, 0, 255), false);
-
-
-	//SetDrawBright(255, 255, 255);// 色を変える
-	//// 輝度を徐々に下げていって暗くする
-	//
+	else
+	{
+		if ((flamCnt / 5) % 2 == 0)
+		{
+			// 決定　点滅を早くする
+			startButton = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2, "image/title/tsButton1.png", true);
+		}
+	}
 	
 	// ストーリーチェックボタン
 	scButton1 = LoadGraphScreen(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2+100, "image/title/scButton1.png", true);// この位置にストーリーを見るボタン
 	
 	//DrawFormatString(50, 50, 0xff0000, "%d", _time);
+	push = LoadGraphScreen(SCREEN_SIZE_X / 3+50, SCREEN_SIZE_Y / 2 - 25, "image/push.png", true);
 
-	DrawFormatString(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2-20, GetColor(0, 0, 0), "PushEnterKey");
+	//DrawFormatString(SCREEN_SIZE_X / 3, SCREEN_SIZE_Y / 2-20, GetColor(0, 0, 0), "PushEnterKey");
 
 	ScreenFlip();
 	return false;
@@ -107,13 +110,14 @@ bool TitleScene::TitleDraw(void)
 int TitleScene::Init(void)
 {
 	lpSceneMng.SetDrawOffset(VECTOR2(GAME_SCREEN_X, GAME_SCREEN_Y));
-
+	_titleBGM= LoadSoundMem("BGM/titleBGM.mp3");
+	_titleSE = LoadSoundMem("BGM/titleSE.mp3");
 	bright = 255;
-	fadeCnt = 0;
+	//fadeCnt = 0;
 	flamCnt = 0;
 	//_nowScene = SCENE_TYPE_TITLE;
-	selectFlag = true;
-	//_time = 0;
+	selectFlag = false;
+	_time = 0;
 	//changeFlag = false;
 	return 0;
 }

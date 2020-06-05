@@ -31,7 +31,9 @@ Player::~Player()
 //
 bool Player::initAnim(void)
 {
-	AddAnim("停止", 0, 0, 2, 6, true);
+	//AddAnim("停止", 0, 0, 2, 6, true);
+	//AddAnim("移動", 0, 2, 2, 8, true);
+	AddAnim("停止", 0, 0, 1, 6, true);
 	AddAnim("移動", 0, 2, 2, 8, true);
 	//AddAnim("死亡", 4, 0, 4, 8, false);		// y,x,コマ数,?	falseじゃないと死んで復活する(アニメーションのループ)
 	return true;

@@ -20,11 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="classObj.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="HelpMode.cpp" />
     <ClCompile Include="ImageMng.cpp" />
     <ClCompile Include="GameCtl.cpp" />
     <ClCompile Include="main.cpp" />
@@ -40,11 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="classObj.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="HelpMode.h" />
     <ClInclude Include="ImageMng.h" />
     <ClInclude Include="GameCtl.h" />
     <ClInclude Include="Obj.h" />

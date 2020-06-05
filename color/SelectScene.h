@@ -12,7 +12,6 @@ public:
 	SelectScene();
 	~SelectScene();
 	virtual unique_Base Updata(unique_Base own, const GameCtl&ctl);
-	bool FadeInScreen(int fadeStep);
 //	STAGE StageLoad(STAGE getStage, VECTOR2 pos, std::string f_name,bool flag);
 	//bool StageLoad1(void);
 	//bool StageLoad2(void);
@@ -24,15 +23,17 @@ private:
 
 	bool SelectDraw(void);
 
-	int fadeCnt;
-	bool fadeOut;
 	int flamCnt;
 
+	int _selectBGM;
+	int _selectSE;
 	int backImage;
 	int _stage[2];
 	int _stageNum;
 	int stage1;
 	int stage2;
+	int moji1;
+	int moji2;
 
 	VECTOR2 selectPos;// 80 160
 	VECTOR2 nowPos;

@@ -10,16 +10,16 @@ public:
 	TitleScene();
 	~TitleScene();
 	virtual unique_Base Updata(unique_Base own, const GameCtl&ctl);
-	bool FadeOutScreen(int fadeStep);
 	virtual int Init(void);
 
 	bool TitleDraw(void);
 
 private:
+	int _titleBGM;
+	int _titleSE;
 	
-	int fadeCnt;
-	bool fadeOut;
 	// ‰æ‘œ—p•Ï”
+	int push;
 	int startButton;
 	int backImage;
 	int bright;
@@ -28,7 +28,7 @@ private:
 	bool selectFlag;
 	SCENE_TYPE _nowScene;
 	SCENE_TYPE _oldScene;
-	//float _time;
+	int _time;
 	//bool changeFlag;
 };
 
