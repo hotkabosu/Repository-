@@ -12,10 +12,6 @@ public:
 	SelectScene();
 	~SelectScene();
 	virtual unique_Base Updata(unique_Base own, const GameCtl&ctl);
-//	STAGE StageLoad(STAGE getStage, VECTOR2 pos, std::string f_name,bool flag);
-	//bool StageLoad1(void);
-	//bool StageLoad2(void);
-
 
 private:
 

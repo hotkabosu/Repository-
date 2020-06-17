@@ -1,6 +1,5 @@
 #pragma once
 #include "BaseScene.h"
-#include "Obj.h"
 #include "color.h"
 #include "StageCtl.h"
 #include "VECTOR2.h"
@@ -32,6 +31,13 @@ enum class ENEMY_TYPE
 	BOSS,
 	MAX
 };
+enum DIR {
+	DIR_DOWN,
+	DIR_LEFT,
+	DIR_RIGHT,
+	DIR_UP,
+	DIR_MAX
+};
 
 class GameCtl;
 class Obj;
@@ -45,13 +51,12 @@ public:
 
 	virtual unique_Base Updata(unique_Base own, const GameCtl& ctl);
 	void StatusDraw(void);
-	void StageControl(void);
 
 	void AddScore(void);
 	void StageDraw(void);
 
 	void NormalEnemy(void);
-	void BossCheck(void);
+	//void BossCheck(void);
 	void PlayerCtl(void);
 	void ChangeColor(void);
 	void PlayerDraw(void);
@@ -76,6 +81,7 @@ private:
 	int _damage;
 	bool _damageFlag;
 	int hpBox;		
+	int hp;
 	int playerLife;
 	// 遠距離攻撃
 	int _shot;
@@ -83,8 +89,6 @@ private:
 	int _shotSize;
 	bool _shotFlag;
 	VECTOR2 _shotPos;
-	//float frendPos;
-	//bool hitFrend;
 
 
 
@@ -117,9 +121,10 @@ private:
 	
 	int nowColor[3];
 	int colorNum;
-	int _gagePosX;// 左側の基準座標
-	int _gageEndPosX;// 右側の座標　減ったり増えたりしているように見せるため
-	unsigned int color[3];
+	int markRed;
+	int markBlue;
+	int markGreen;
+
 	
 	int enemyNum;
 	ENEMY_TYPE enemyTypetest[static_cast<int>(ENEMY_TYPE::MAX)];
@@ -127,16 +132,15 @@ private:
 	COLOR_TYPE enemyColor;
 	ENEMY_COLOR enemyType;
 	COLOR_TYPE playerColor;
-	
-	//int _gBoss;
-	//VECTOR2 _bossPos;
-	//int _bossLife;
-	//bool _bossFlag;
-	//bool _bossMoveFlag;
+
 	int score;
 	int highScore;
-	bool helpFlag;
 
+	int _backLayer;
+	int _mojiGameOver;
 	int _button[3];
 	int _buttonNum;
+	int _buttonPosY;
+
+
 };

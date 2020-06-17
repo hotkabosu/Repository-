@@ -20,11 +20,8 @@ public:
 		static StageCtl s_Instance;
 		return (s_Instance);
 	}
-//	void SetEnemy(const VECTOR2& pos, weakListObj objList);
-	void Draw(void);
-	//bool MapLoad(void);		// ﾏｯﾌﾟをﾛｰﾄﾞ
-	void FirstStage(VECTOR2 pos);	// ﾃﾞﾌｫﾙﾄﾏｯﾌﾟ(青)をﾛｰﾄﾞ
-	void SecondStage(VECTOR2 pos);	// ﾃﾞﾌｫﾙﾄﾏｯﾌﾟ(赤)をﾛｰﾄﾞ
+	void FirstStage(VECTOR2 pos);	// 上のマップ
+	void SecondStage(VECTOR2 pos);	// 下のマップ
 
 	STAGE getStage(void);
 	void setStage(STAGE stage);

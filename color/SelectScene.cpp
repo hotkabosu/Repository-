@@ -52,11 +52,10 @@ unique_Base SelectScene::Updata(unique_Base own, const GameCtl& ctl)
 
 	if (selectFlag == true)
 	{
-		PlaySoundMem(_selectSE, DX_PLAYTYPE_LOOP, false);
+		PlaySoundMem(_selectSE, DX_PLAYTYPE_NORMAL, false);
 		ChangeVolumeSoundMem(155, _selectBGM);
 		changeTime++;
-		// エンターを押したらchangeTime加算
-		//　changeTimeが50になるまで点滅を早く　50を超えたらゲームシーンに移動		
+
 
 		if (50 <= changeTime)
 		{
@@ -89,8 +88,7 @@ bool SelectScene::SelectDraw(void)
 {
 	PlaySoundMem(_selectBGM, DX_PLAYTYPE_LOOP, false);
 	ClsDrawScreen();
-	//backImage = LoadGraphScreen(0, 0, "image/select/sBack0.png", true);
-
+	backImage = LoadGraphScreen(0, 0, "image/selectBack.png", true);
 	DrawFormatString(150, 100, GetColor(255, 0, 255), "SelectStage　PushEnter");
 	if (selectFlag == false)
 	{
@@ -110,14 +108,12 @@ bool SelectScene::SelectDraw(void)
 
 	}
 	_stage[static_cast<int>(STAGE::FIRST)] = LoadGraphScreen(100, 50, "image/select/testStage.png", true);
-	moji1= LoadGraphScreen(SCREEN_SIZE_X / 2+25, 150, "image/select/mojiFirst.png", true);
 	_stage[static_cast<int>(STAGE::SECOND)] = LoadGraphScreen(100, 320, "image/select/testStage2.png", true);
-	moji2 = LoadGraphScreen(SCREEN_SIZE_X / 2+25, 480, "image/select/mojiSecond.png", true);
 
-	//DrawFormatString(SCREEN_SIZE_X - 50, 450, GetColor(255, 255, 255), "[%d]", _stageNum);
-	DrawFormatString(SCREEN_SIZE_X - 200, 570, GetColor(255, 255, 255), "Ｗキー：↑\n");
-	DrawFormatString(SCREEN_SIZE_X - 200, 600, GetColor(255, 255, 255), "Ｓキー：↓\n");
-	DrawFormatString(SCREEN_SIZE_X - 200, 630, GetColor(255, 255, 255), "Ｅｎｔｅｒキー：決定\n");
+	DrawFormatString(SCREEN_SIZE_X - 50, 450, GetColor(255, 255, 255), "[%d]", _stageNum);
+	DrawFormatString(SCREEN_SIZE_X - 200, 570, GetColor(0, 0, 0), "Ｗキー：↑\n");
+	DrawFormatString(SCREEN_SIZE_X - 200, 600, GetColor(0, 0, 0), "Ｓキー：↓\n");
+	DrawFormatString(SCREEN_SIZE_X - 200, 630, GetColor(0, 0, 0), "Ｅｎｔｅｒキー：決定\n");
 
 
 	ScreenFlip();
@@ -136,6 +132,5 @@ int SelectScene::Init(void)
 	changeTime = 0;
 	_stageNum = 1;
 	selectFlag = false;
-	//decided = lpStageCtl.FirstStage(STAGE::FIRST);
 	return 0;
 }

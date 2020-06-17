@@ -18,6 +18,7 @@ private:
 
 	virtual int Init(void);
 
+	int backImage;
 	int reTitleButton;
 	int reStartButton;
 	int reSelectButton;
@@ -27,5 +28,9 @@ private:
 	int changeScene[3];
 	int changeNum;
 	SCENE_TYPE scene;
+
+	int _resultBGM;
+	int _resultSE;
+	int _cursorSE;
 };
 

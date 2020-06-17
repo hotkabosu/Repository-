@@ -2,9 +2,9 @@
 #include "SceneMng.h"
 #include "GameCtl.h"
 #include "TitleScene.h"
-#include "ResultScene.h"
-#include"SelectScene.h"
-#include "GameScene.h"
+//#include "ResultScene.h"
+//#include "SelectScene.h"
+//#include "GameScene.h"
 
 SceneMng::SceneMng()	// ºİ½Ä×¸À
 {
@@ -18,9 +18,7 @@ SceneMng::~SceneMng()	// ÃŞ½Ä×¸À
 void SceneMng::Run(void) 
 {
 								// ˆê”ÔÅ‰‚ÉŒÄ‚Î‚ê‚é‰æ–Ê
-	activeScene = std::make_unique<GameScene>();	// ‰Šú‰»
-
-	//ImageMng::GetInstance().GetID("·¬×", "image/char.png", { 30, 32 }, { 10,10 });	// ƒLƒƒƒ‰‰æ‘œ
+	activeScene = std::make_unique<TitleScene>();	// ‰Šú‰»
 
 	// ---------- ¹Ş°ÑÙ°Ìß 
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)	// —¼•ûDxLib‚Ì–½—ß
